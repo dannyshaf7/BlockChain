@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -100,7 +99,6 @@ public class Main {
                                 BigInteger previousHash = BigInteger.valueOf(0);
                                 Block genesisBlock = new Block(previousHash, transactions);
                                 blockChain.add(genesisBlock);
-                                genesisBlock.getBlockHash();
                             }
                             break;
                         case 2:
