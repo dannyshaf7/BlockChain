@@ -3,20 +3,17 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /* Questions for professor:
-    1. The sample output select 1.2 submenu instructions says to recalculate previous hash. If the user is only editing
-       in this submenu the block they are adding to the blockchain, the previous hash would not change.
-       a. "If transactions are edited or added, it needs refresh first before submit it." Does this mean that if the
-          user selects menu option 3 and edits the transaction that it's not supposed to be added until they go back
-          to submenu 1.2 to refresh and then 1.1 to submit?
+    1.
+    2. Do we include all data (the previous hash and the transactions when calculating the block hash or just the
+       transactions)?
  * To-do list:
-    1. Change to accept transactions until "done" is entered.
-    2. Add edit block functionality:
+    1. Add edit block functionality:
         a. When any block is changed, its hash changes and so each following hashes changes (all blocks should update).
         b. Must verify and show editing a transaction in a block will break the consistency with the "previousHash" in
            the block after the edited one.
-    3. Change display block error to the following:
-        a. "The block does not exist in this Blockchain."
-    4. Change the add a block to display the proposed block and ask for confirmation?
+        c. add to string (cannot be edited) or (for editing)
+        ***mostly functional, switch out set for add function on the arraylist
+    2. Change the add a block to display the proposed block and ask for confirmation?
         a. If 1.2 is selected recalculate previous hash, current hash.
 
 */
@@ -40,7 +37,9 @@ public class Main {
                 "Please input the block number you wish to see. \n";
 
         String subMenuThree = "Edit Block Submenu: \n" +
-                "Please input the block number you wish to edit. \n";
+                "Please input the block number you wish to edit. \n" +
+                "Note: only the transactions can be edited. Any changes will also change this block hash and " +
+                "hashes following";
 
         ArrayList<Block> blockChain = new ArrayList<>();
         boolean continueFlag = true;
@@ -63,20 +62,13 @@ public class Main {
                         case 1:
                             System.out.println("1 selected. Submit " +
                                     "Block (Add Current Block to Blockchain) \n");
-                            System.out.println("Please enter the number of transactions to add: \n");
+                            ArrayList<String> transArray = new ArrayList<>();
+                            int count = 0;
+                            System.out.println("Please enter the name of the payer (or \"done\" to end): \n");
                             userInput = new Scanner(System.in);
-                            while (!userInput.hasNextInt()) {
-                                System.out.println("Input error. Please try again.\n +" +
-                                        "Please enter the number of transactions to add: \n");
-                                userInput = new Scanner(System.in);
-                            }
-                            int numTrans = userInput.nextInt();
-                            System.out.println("number of transactions: " + numTrans);
-                            String[] transactions = new String[numTrans];
-                            for (int i = 0; i < transactions.length; i++) {
-                                System.out.println("Please enter the name of the payer: \n");
-                                userInput = new Scanner(System.in);
-                                String newTrans = userInput.nextLine() + " pays ";
+                            String newTrans = userInput.nextLine();
+                            while (!newTrans.equals("done")) {
+                                newTrans += " pays ";
                                 System.out.println("Please enter the number of bitcoins to pay: \n");
                                 userInput = new Scanner(System.in);
                                 while (!userInput.hasNextInt()) {
@@ -88,17 +80,27 @@ public class Main {
                                 System.out.println("Please enter the name of the payee: \n");
                                 userInput = new Scanner(System.in);
                                 newTrans += userInput.nextLine() + "; ";
-                                transactions[i] = newTrans;
+                                transArray.add(newTrans);
+                                count += 1;
+                                System.out.println("Please enter the name of the payer (or \"done\" to end): \n");
+                                userInput = new Scanner(System.in);
+                                newTrans = userInput.nextLine();
                             }
-                            if (blockChain.size() > 0) {
-                                int blockIndex = blockChain.size();
-                                BigInteger previousHash = blockChain.get(blockIndex - 1).getBlockHash();
-                                Block nextBlock = new Block(previousHash, transactions);
-                                blockChain.add(nextBlock);
-                            } else {
-                                BigInteger previousHash = BigInteger.valueOf(0);
-                                Block genesisBlock = new Block(previousHash, transactions);
-                                blockChain.add(genesisBlock);
+                            if (transArray.size() > 0) {
+                                String[] transactions = new String[count];
+                                for (int i = 0; i < transArray.size(); i++) {
+                                    transactions[i] = transArray.get(i);
+                                }
+                                if (blockChain.size() > 0) {
+                                    int blockIndex = blockChain.size();
+                                    BigInteger previousHash = blockChain.get(blockIndex - 1).getBlockHash();
+                                    Block nextBlock = new Block(previousHash, transactions);
+                                    blockChain.add(nextBlock);
+                                } else {
+                                    BigInteger previousHash = BigInteger.valueOf(0);
+                                    Block genesisBlock = new Block(previousHash, transactions);
+                                    blockChain.add(genesisBlock);
+                                }
                             }
                             break;
                         case 2:
@@ -122,10 +124,10 @@ public class Main {
                     if (userInput.hasNextInt()) {
                         submenuChoice = userInput.nextInt() - 1;
                         if (submenuChoice >= 0 && submenuChoice < blockChain.size()) {
-                            System.out.println(blockChain.get(submenuChoice).toString());
+                            System.out.println(blockChain.get(submenuChoice).toString() + "\n");
                         }
                         else {
-                            System.out.println("Input Error: not a valid block number. Returning to Main Menu. ");
+                            System.out.println("The block does not exist in this blockchain. Returning to Main Menu. ");
                         }
                     } else {
                         System.out.println("Input Error: not a valid number. Returning to " +
@@ -136,13 +138,93 @@ public class Main {
                     System.out.println(subMenuThree);
                     userInput = new Scanner(System.in);
                     if (userInput.hasNextInt()) {
-                        submenuChoice = userInput.nextInt();
-                        System.out.println(submenuChoice + " selected. " +
-                                "Edit Block is under construction. \n");
+                        submenuChoice = userInput.nextInt() - 1;
+                        if (submenuChoice >= 0 && submenuChoice < blockChain.size()) {
+                            System.out.println(blockChain.get(submenuChoice).toString());
+                            ArrayList<String> transArray = new ArrayList<>();
+                            int count = 0;
+                            System.out.println("Please enter the name of the payer (or \"done\" to end): \n");
+                            userInput = new Scanner(System.in);
+                            String editTrans = userInput.nextLine();
+                            while (!editTrans.equals("done")) {
+                                editTrans += " pays ";
+                                System.out.println("Please enter the number of bitcoins to pay: \n");
+                                userInput = new Scanner(System.in);
+                                while (!userInput.hasNextInt()) {
+                                    System.out.println("Input error. Please try again.\n +" +
+                                            "Please enter the number of bitcoins to pay: \n");
+                                    userInput = new Scanner(System.in);
+                                }
+                                editTrans += userInput.nextInt() + " BTC to ";
+                                System.out.println("Please enter the name of the payee: \n");
+                                userInput = new Scanner(System.in);
+                                editTrans += userInput.nextLine() + "; ";
+                                transArray.add(editTrans);
+                                count += 1;
+                                System.out.println("Please enter the name of the payer (or \"done\" to end): \n");
+                                userInput = new Scanner(System.in);
+                                editTrans = userInput.nextLine();
+                            }
+                            if (transArray.size() > 0) {
+                                String[] transactions = new String[count];
+                                for (int i = 0; i < transArray.size(); i++) {
+                                    transactions[i] = transArray.get(i);
+                                }
+                                // System.out.println(transArray);
+                                int blockIndex = submenuChoice;
+                                // System.out.println(submenuChoice);
+                                if (submenuChoice > 0) {
+                                    // System.out.println("looloo");
+                                    BigInteger previousHash = blockChain.get(blockIndex - 1).getBlockHash();
+                                    Block blockEdit = new Block(previousHash, transactions);
+                                    // System.out.println(blockIndex);
+                                    blockChain.set(blockIndex, blockEdit);
+                                    System.out.println(blockChain);
+                                    blockIndex += 1;
+                                    // System.out.println(blockIndex);
+                                    int chainSize = blockChain.size();
+                                    System.out.println(chainSize);
+                                    // for (int i = blockIndex; i < blockChain.size(); i++) {
+                                    while (blockIndex < chainSize) {
+                                        // System.out.println(blockIndex);
+                                        // System.out.println(blockChain.size());
+                                        previousHash = blockChain.get(blockIndex - 1).getBlockHash();
+                                        transactions = blockChain.get(blockIndex - 1).getTransaction();
+                                        blockEdit = new Block(previousHash, transactions);
+                                        blockChain.set(blockIndex, blockEdit);
+                                        blockIndex += 1;
+                                    }
+                                } else {
+                                    BigInteger previousHash = BigInteger.valueOf(0);
+                                    Block blockEdit = new Block(previousHash, transactions);
+                                    // System.out.println(blockIndex);
+                                    blockChain.set(blockIndex, blockEdit);
+                                    System.out.println(blockChain);
+                                    blockIndex += 1;
+                                    // System.out.println(blockIndex);
+                                    int chainSize = blockChain.size();
+                                    System.out.println(chainSize);
+                                    // for (int i = blockIndex; i < blockChain.size(); i++) {
+                                    while (blockIndex < chainSize) {
+                                        // System.out.println(blockIndex);
+                                        // System.out.println(blockChain.size());
+                                        previousHash = blockChain.get(blockIndex - 1).getBlockHash();
+                                        transactions = blockChain.get(blockIndex - 1).getTransaction();
+                                        blockEdit = new Block(previousHash, transactions);
+                                        blockChain.set(blockIndex, blockEdit);
+                                        blockIndex += 1;
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            System.out.println("The block does not exist in this blockchain. Returning to Main Menu. ");
+                        }
                     } else {
-                        System.out.println("Input Error. Returning to " +
+                        System.out.println("Input Error: not a valid number. Returning to " +
                                 "Main Menu. \n");
                     }
+                    break;
                 case 4:
                     for (Block aBlock : blockChain) {
                         System.out.println(aBlock.toString());

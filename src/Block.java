@@ -19,8 +19,8 @@ public class Block {
     public BigInteger getPreviousHash(){
         return previousHash;
     }
-    public String getTransaction(int index){
-        return transactions[index];
+    public String[] getTransaction(){
+        return transactions;
     }
     public BigInteger getBlockHash(){
         return blockHash;
