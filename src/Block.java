@@ -10,7 +10,6 @@ public class Block {
     public Block (BigInteger prevHash, String[] trans) {
         this.previousHash = prevHash;
         this.transactions = trans;
-
         HashGen newHash = new HashGen();
         this.blockHash = newHash.createBlockHash(previousHash, transactions);
     }

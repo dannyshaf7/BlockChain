@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="346247cf-30b3-46a6-b343-f07d35909861" name="Changes" comment="Minor bug fixes">
+    <list default="true" id="346247cf-30b3-46a6-b343-f07d35909861" name="Changes" comment="Mostly functional, next step is to add submit or refresh options to menu 1 submenu">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Block.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HashGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HashGen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,12 +63,20 @@
       <option name="project" value="LOCAL" />
       <updated>1719286901442</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Mostly functional, next step is to add submit or refresh options to menu 1 submenu">
+      <created>1719611158122</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1719611158122</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First update" />
     <MESSAGE value="Minor bug fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Minor bug fixes" />
+    <MESSAGE value="Mostly functional, next step is to add submit or refresh options to menu 1 submenu" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mostly functional, next step is to add submit or refresh options to menu 1 submenu" />
   </component>
 </project>
